@@ -1,10 +1,24 @@
+"use client";
+
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { IconLoader2 } from "@tabler/icons-react";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 import { ReactNode } from "react";
 
 export default function Page({ children }: { children: ReactNode }) {
+  const { status } = useSession();
+  if (status === "loading")
+    return (
+      <IconLoader2 className="size-10 animate-spin mx-auto h-screen text-gray-500" />
+    );
+  if (status === "unauthenticated") {
+    redirect("/");
+  }
+
   return (
     <SidebarProvider
       style={
